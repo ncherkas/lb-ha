@@ -69,5 +69,4 @@ The results of these commands can be also see in the queue-consumer log.
  - aws-cli container is used as queue client since in the home assignment there is no much additional logic which would require a separate Go app. (you can also run it in parallel in as many copies as needed)
  - provided `EntryWriter` interface the dump can write data into different locations by implementing e.g. file-based writer
  - in case of distributed setup, the in-memory store should be backed by Redis or similar storage
- - a unit test example can be found under `consumer/store`, run `go test ./...` to run it. 
- - 
+ - a unit test example can be found under `consumer/store`, use `go test ./...` to run it
