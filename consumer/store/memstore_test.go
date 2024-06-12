@@ -58,7 +58,7 @@ func TestMemStore_Get(t *testing.T) {
 
 func TestMemStore_DumpAll(t *testing.T) {
 	mockWriter := new(MockEntryWriter)
-	store := &MemStore{GetAllwriter: mockWriter}
+	store := &MemStore{DumpAllWriter: mockWriter}
 
 	// Adding entries to the store
 	store.Add("key1", "value1", 1)

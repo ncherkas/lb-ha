@@ -29,12 +29,12 @@ func (l *EntryLogger) write(skv *StoreEntry) {
 
 // MemStore implementation build around sync.Map
 type MemStore struct {
-	m            sync.Map
-	GetAllwriter EntryWriter
+	m             sync.Map
+	DumpAllWriter EntryWriter // Can be replaces with custom impl. after store creation
 }
 
 func New() *MemStore {
-	return &MemStore{GetAllwriter: new(EntryLogger)}
+	return &MemStore{DumpAllWriter: new(EntryLogger)}
 }
 
 func (s *MemStore) Add(key, val string, timestamp int64) {
@@ -64,7 +64,7 @@ func (s *MemStore) DumpAll() {
 	})
 	for i := range entries {
 		skv := entries[i]
-		s.GetAllwriter.write(skv)
+		s.DumpAllWriter.write(skv)
 		entries[i] = nil // Cleaning up them for quicker GC
 	}
 	s = nil
