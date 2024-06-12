@@ -1,0 +1,35 @@
+version: '3.9'
+services:
+  queue-consumer: 
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      # The queue will be created if doesn't exist
+      QUEUE_NAME: test-q
+      # Using localstack profile
+      AWS_PROFILE: localstack
+    volumes:
+      - .awslocal:/home/appuser/.aws:ro  # Mount the .aws directory
+    depends_on:
+      - localstack
+  localstack:
+    container_name: "${LOCALSTACK_DOCKER_NAME:-localstack-main}"
+    image: localstack/localstack
+    ports:
+      - "127.0.0.1:4566:4566"            # LocalStack Gateway
+      - "127.0.0.1:4510-4559:4510-4559"  # external services port range
+    environment:
+      # LocalStack configuration: https://docs.localstack.cloud/references/configuration/
+      - DEBUG=${DEBUG:-0}
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+  aws-cli:
+      image: amazon/aws-cli
+      environment:
+        # Using localstack profile
+        AWS_PROFILE: localstack      
+      volumes:
+        - .awslocal:/root/.aws:ro
+      entrypoint: [ "sh", "-c", "while true; do sleep 1000; done" ]     
